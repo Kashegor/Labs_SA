@@ -19,26 +19,26 @@ namespace Lab3_SA
             int lengthAlt = matrixOfScores.GetLength(1);
             int lengthExp = matrixOfScores.GetLength(0);
 
-            int[] sumScores = new int[lengthAlt];
+            int[] altScores = new int[lengthAlt];
             for (int i = 0; i < lengthAlt; i++)
             {
-                sumScores[i] = 0;
+                altScores[i] = 0;
                 for (int j = 0; j < lengthExp; j++)
                 {
-                    sumScores[i] += matrixOfScores[j, i];
+                    altScores[i] += matrixOfScores[j, i];
                 }
             }
-            int SumScores = sumScores.Sum();
+            int sumScores = altScores.Sum();
             double[] weightsAlts = new double[lengthAlt];
             for (int i = 0; i < lengthAlt; i++)
             {
-                weightsAlts[i] = sumScores[i] / (double)SumScores;
+                weightsAlts[i] = altScores[i] / (double)sumScores;
             }
 
             double[] averageScores = new double[lengthAlt];
             for (int i = 0; i < lengthAlt; i++)
             {
-                averageScores[i] = sumScores[i] / (double)lengthExp;
+                averageScores[i] = altScores[i] / (double)lengthExp;
             }
             double[] dispersionsForExperts = new double[lengthExp];
             for (int i = 0; i < lengthExp; i++)
