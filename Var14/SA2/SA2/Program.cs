@@ -10,7 +10,7 @@ namespace SA2
             int[,] preferences ={
             { 1, 3, 2 },
             { 2, 2, 2 },
-            { 1, 2, 1 }};
+            { 1, 2, 1 } };
 
             int experts = preferences.GetLength(0);
             int alterns = preferences.GetLength(1);
