@@ -12,12 +12,12 @@ namespace SA_Lab_5
             //тутачки по условию мнения экспертов о критериях
             double[,] matrixOfRelationsKriteriesByExp1 = new double[,]
           { { 1, 5, 3 },
-            { 0, 1, 3 },
-            { 0, 0, 1 }};
+            { 0.2, 1, 3 },
+            { 0.3333, 0.3333, 1 }};
             double[,] matrixOfRelationsKriteriesByExp2 = new double[,]
           { { 1, 5, 7 },
-            { 0, 1, 0.333 },
-            { 0, 0, 1 } };
+            { 0.2, 1, 0.3333 },
+            { 0.14286, 3, 1 } };
             //тута инфа из таблицы
             int[,] matrixOfParametrs = new int[,] {
            //Alt
@@ -37,11 +37,11 @@ namespace SA_Lab_5
                         for (int i = 0; i < matrixOfParametrs.GetLength(0); i++)
                         {
 
-                                if (matrixOfParametrs[i, k] >= matrixOfParametrs[i, j] && matrixOfParametrs[i, j] != 0)
-                                {
-                                    isRemove[i] = true;
-                                }
-                            
+                            if (matrixOfParametrs[i, k] >= matrixOfParametrs[i, j] && matrixOfParametrs[i, j] != 0)
+                            {
+                                isRemove[i] = true;
+                            }
+
                         }
                         bool notRemoveAlt = false;
                         foreach (var item in isRemove)
@@ -63,7 +63,7 @@ namespace SA_Lab_5
                     }
                 }
             }
-            int[,] modifyedMatrixOfParametrs = new int[matrixOfParametrs.GetLength(0), matrixOfParametrs.GetLength(1) - indexRemoveAlts];
+            int[,] modifyedParametrs = new int[matrixOfParametrs.GetLength(0), matrixOfParametrs.GetLength(1) - indexRemoveAlts];
 
             for (int i = 0; i < matrixOfParametrs.GetLength(0); i++)
             {
@@ -72,7 +72,7 @@ namespace SA_Lab_5
                 {
                     if (matrixOfParametrs[i, j] != 0)
                     {
-                        modifyedMatrixOfParametrs[i, jMod] = matrixOfParametrs[i, j];
+                        modifyedParametrs[i, jMod] = matrixOfParametrs[i, j];
                     }
                     else
                     {
@@ -82,48 +82,137 @@ namespace SA_Lab_5
                 }
             }
 
-            for (int i = 0; i < modifyedMatrixOfParametrs.GetLength(0); i++)
-            {
-                for (int j = 0; j < modifyedMatrixOfParametrs.GetLength(1); j++)
-                {
-                    Console.Write(modifyedMatrixOfParametrs[i, j] + " ");
-                }
-                Console.WriteLine();
-            }
-            //double[,] relationsAlternativesByFirstKrit = new double[modifyedMatrixOfParametrs.GetLength(0), modifyedMatrixOfParametrs.GetLength(1)];
-
-
-
-            //int minusRelationIndex = 1;
-            //int plusRelationIndex = 1;
-            //for (int j = 0; j < modifyedMatrixOfParametrs.GetLength(1); j++)
+            //Вывод метода Пурето
+            //Console.WriteLine("Оставшиеся значения альтернатив после очистки методом Пурето:");
+            //for (int i = 0; i < modifyedParametrs.GetLength(0); i++)
             //{
-            //    if (modifyedMatrixOfParametrs[0, j] == modifyedMatrixOfParametrs[0, 0])
+            //    for (int j = 0; j < modifyedParametrs.GetLength(1); j++)
             //    {
-            //        relationsAlternativesByFirstKrit[0, j] = 1;
+            //        Console.Write(modifyedParametrs[i, j] + " ");
             //    }
-            //    else if (modifyedMatrixOfParametrs[0, 0] < modifyedMatrixOfParametrs[0, j])
-            //    {
-            //        minusRelationIndex += 2;
-            //        relationsAlternativesByFirstKrit[0, j] = 1 / (double)minusRelationIndex;
-            //    }
-            //    else if (modifyedMatrixOfParametrs[0, 0] > modifyedMatrixOfParametrs[0, j])
-            //    {
-            //        plusRelationIndex += 2;
-            //        relationsAlternativesByFirstKrit[0, j] = 1 / (double)minusRelationIndex;
-            //    }
+            //    Console.WriteLine();
             //}
 
-            //double[,] matrixOfRelationsAlternativesByFirstKrit = new double[1, 1];
-            //double[,] matrixOfRelationsAlternativesBySecondKrit = new double[1, 1];
-            //double[,] matrixOfRelationsAlternativesByThirdKrit = new double[1, 1];
-            //{ { 1, 0, 0, 0, 0, 0 },
-            //  { 0, 1, 0, 0, 0, 0 },
-            //  { 0, 0, 1, 0, 0, 0 },
-            //  { 0, 0, 0, 1, 0, 0 },
-            //  { 0, 0, 0, 0, 1, 0 },
-            //  { 0, 0, 0, 0, 0, 1 } };
+            //Основной метод
+            int alternativesCount = modifyedParametrs.GetLength(1);
+            double[,] relationsAlternativesByFirstKrit = new double[alternativesCount, alternativesCount];
+            double[,] relationsAlternativesBySecondKrit = new double[alternativesCount, alternativesCount];
+            double[,] relationsAlternativesByThirdKrit = new double[alternativesCount, alternativesCount];
+            for (int i = 0; i < alternativesCount; i++)//для инициализации
+            {
+                for (int j = 0; j < alternativesCount; j++)
+                {
+                    relationsAlternativesByFirstKrit[i, j] = modifyedParametrs[0, i] / (double)modifyedParametrs[0, j];
+                    relationsAlternativesBySecondKrit[i, j] = modifyedParametrs[1, i] / (double)modifyedParametrs[1, j];
+                    relationsAlternativesByThirdKrit[i, j] = modifyedParametrs[2, i] / (double)modifyedParametrs[2, j];
+                }
+            }
 
+            //Console.WriteLine("Вычесленная матрица зависимостей альтернатив для первого критерия:");
+            //for (int i = 0; i < alternativesCount; i++)
+            //{
+            //    for (int j = 0; j < alternativesCount; j++)
+            //    {
+            //        Console.Write(relationsAlternativesByFirstKrit[i, j] + "\t\t");
+            //    }
+            //    Console.WriteLine();
+            //}
+
+            //получение весов критериев
+            int kriteriesCount = matrixOfRelationsKriteriesByExp1.GetLength(0);
+            double[] kriteriesWeights = GetWeights(matrixOfRelationsKriteriesByExp1, matrixOfRelationsKriteriesByExp2);
+            //Console.WriteLine("Веса критериев:");
+            //for (int i = 0; i < kriteriesCount; i++)
+            //{
+            //    Console.Write(kriteriesWeights[i] + " ");
+            //}
+            //Console.WriteLine();
+            //получение весов альтернатив по отдельным критериям
+            double[] alternativesWeightsByFirstKrit = GetWeights(relationsAlternativesByFirstKrit);
+            double[] alternativesWeightsBySecondKrit = GetWeights(relationsAlternativesBySecondKrit);
+            double[] alternativesWeightsByThirdKrit = GetWeights(relationsAlternativesByThirdKrit);
+            //Console.WriteLine("Веса альтернатив по первому критерию:");
+            //for (int i = 0; i < alternativesCount; i++)
+            //{
+            //    Console.Write(alternativesWeightsByFirstKrit[i] + " ");
+            //}
+            //Console.WriteLine();
+            //получаем ответ
+            double[] globalPriors = GetGlobalPriorities(kriteriesWeights, alternativesWeightsByFirstKrit,
+                alternativesWeightsBySecondKrit, alternativesWeightsByThirdKrit);
+            Console.WriteLine("Глобальные приоритеты альтернатив:");
+            for (int i = 0; i < alternativesCount; i++)
+            {
+                Console.Write(globalPriors[i] + " ");
+            }
+        }
+
+        static double[] GetWeights(params double[][,] relations)
+        {
+            int lengthAlt = relations[0].GetLength(1);
+
+            double[][] weightsAlts = new double[relations.Length][];
+            for (int i = 0; i < relations.Length; i++)
+            {
+                weightsAlts[i] = new double[lengthAlt];
+            }
+
+            for (int k = 0; k < relations.Length; k++)
+            {
+                for (int i = 0; i < lengthAlt; i++)
+                {
+                    for (int j = 0; j < lengthAlt; j++)
+                    {
+                        if (relations[k][i, j] == 0)
+                        {
+                            relations[k][i, j] = 1 / relations[k][j, i];
+                        }
+                    }
+                }
+                double[] alternativesScores = new double[lengthAlt];
+                for (int i = 0; i < lengthAlt; i++)
+                {
+                    alternativesScores[i] = 1;
+                    for (int j = 0; j < lengthAlt; j++)
+                    {
+                        alternativesScores[i] *= relations[k][i, j];
+                    }
+                    alternativesScores[i] = Math.Pow(alternativesScores[i], (1 / (double)lengthAlt));
+                }
+                double SumAlternativesScores = alternativesScores.Sum();
+
+
+                for (int i = 0; i < lengthAlt; i++)
+                {
+                    weightsAlts[k][i] = alternativesScores[i] / SumAlternativesScores;
+                }
+            }
+
+            double[] resultWeightsAlts = new double[lengthAlt];
+            for (int i = 0; i < lengthAlt; i++)
+            {
+                for (int k = 0; k < relations.Length; k++)
+                {
+                    resultWeightsAlts[i] += weightsAlts[k][i];
+                }
+                resultWeightsAlts[i] /= relations.Length;
+            }
+
+            return resultWeightsAlts;
+        }
+        
+        static double[] GetGlobalPriorities(double[] kriteriesWeights, params double[][] alternativesWeightsByKrits)
+        {
+            double[] globalPriorities = new double[alternativesWeightsByKrits[0].Length];
+            for (int i = 0; i < alternativesWeightsByKrits[0].Length; i++)
+            {
+                for (int k = 0; k < alternativesWeightsByKrits.Length; k++)
+                {
+                    globalPriorities[i] += kriteriesWeights[k] * alternativesWeightsByKrits[k][i];
+                }
+            }
+
+            return globalPriorities;
         }
 
     }
