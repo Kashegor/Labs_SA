@@ -16,35 +16,35 @@ namespace SA_Lab_9
 
             double[,] parametrs = new double[,] {
            //Alt
-/*Parametr*/{1, 0.91, 0.5, 0.83},
-            {0.7, 0.3, 1, 0.5 },
-            {0.7, 0.8, 1, 0.9}};
+/*Parametr*/{5, 5, 7, 1, 3, 9 },
+            {5, 7, 1, 7, 7, 1 },
+            {5, 1, 7, 3, 1, 5 } };
 
             double[] kriteriesWeights = GetWeights(criteriesExpertsMarks);
 
-            //int[,] modifyedParametrs = GetPareto(parametrs);
+            double[,] modifyedParametrs = GetPareto(parametrs);
 
-            //double[,] nondimensionlessParametrs = GetNondimensionless(modifyedParametrs);
-            //Console.WriteLine("Безразмерные оценки:");
-            //PrintMassive(nondimensionlessParametrs);
+            double[,] nondimensionlessParametrs = GetNondimensionless(modifyedParametrs);
+            Console.WriteLine("Безразмерные оценки:");
+            PrintMassive(nondimensionlessParametrs);
             Console.WriteLine("Матрица индексов согласия:");
-            double[,] acceptIndexes = GetAcceptIndexes(parametrs, kriteriesWeights);
+            double[,] acceptIndexes = GetAcceptIndexes(nondimensionlessParametrs, kriteriesWeights);
             PrintMassive(acceptIndexes);
             Console.WriteLine("Матрица индексов несогласия:");
-            double[,] unacceptIndexes = GetUnacceptIndexes(parametrs);
+            double[,] unacceptIndexes = GetUnacceptIndexes(nondimensionlessParametrs);
             PrintMassive(unacceptIndexes);
             double[] limitValueAcceptIndex = GetLimitValueAcceptIndex(acceptIndexes);
             double[] limitValueUnacceptIndex = GetLimitValueUnacceptIndex(unacceptIndexes);
 
-            double thresholdValueAcceptIndex = 0.5;
-            double thresholdValueUnacceptIndex = 0.51;
+            double thresholdValueAcceptIndex = 0.2;
+            double thresholdValueUnacceptIndex = 0.5;
 
             Console.WriteLine("Номера альтернатив в ядре:");
             for (int i = 0; i < limitValueAcceptIndex.Length; i++)
             {
                 if (limitValueAcceptIndex[i] > thresholdValueAcceptIndex && limitValueUnacceptIndex[i] < thresholdValueUnacceptIndex)
                 {
-                    Console.WriteLine(i+1);
+                    Console.WriteLine(i + 1);
                 }
             }
         }
@@ -75,7 +75,7 @@ namespace SA_Lab_9
                 limitValueAcceptIndex[i] = double.MaxValue;
                 for (int j = 0; j < lenghtAlts; j++)
                 {
-                    if (limitValueAcceptIndex[i] > acceptIndexes[i,j])
+                    if (limitValueAcceptIndex[i] > acceptIndexes[i, j])
                     {
                         limitValueAcceptIndex[i] = acceptIndexes[i, j];
                     }
@@ -96,7 +96,7 @@ namespace SA_Lab_9
                 {
                     for (int i = 0; i < lenghtKrits; i++)
                     {
-                        if (nondimensionlessParametrs[i,j] >= nondimensionlessParametrs[i,k])
+                        if (nondimensionlessParametrs[i, j] >= nondimensionlessParametrs[i, k])
                         {
                             acceptIndexes[j, k] += kriteriesWeights[i];
                         }
@@ -118,7 +118,7 @@ namespace SA_Lab_9
                 {
                     for (int i = 0; i < lenghtKrits; i++)
                     {
-                        if (nondimensionlessParametrs[i,j] <= nondimensionlessParametrs[i,k] && Math.Abs(nondimensionlessParametrs[i, k] - nondimensionlessParametrs[i, j]) > unacceptIndexes[j, k])
+                        if (nondimensionlessParametrs[i, j] <= nondimensionlessParametrs[i, k] && Math.Abs(nondimensionlessParametrs[i, k] - nondimensionlessParametrs[i, j]) > unacceptIndexes[j, k])
                         {
                             unacceptIndexes[j, k] = Math.Abs(nondimensionlessParametrs[i, k] - nondimensionlessParametrs[i, j]);
                         }
@@ -152,12 +152,12 @@ namespace SA_Lab_9
             return weightsAlts;
         }
 
-        private static double[,] GetNondimensionless(int[,] modifyedParametrs)
+        private static double[,] GetNondimensionless(double[,] modifyedParametrs)
         {
             double[,] result = new double[modifyedParametrs.GetLength(0), modifyedParametrs.GetLength(1)];
             for (int i = 0; i < modifyedParametrs.GetLength(0); i++)
             {
-                int max = modifyedParametrs[i, 0];
+                double max = modifyedParametrs[i, 0];
                 for (int j = 0; j < modifyedParametrs.GetLength(1); j++)
                 {
                     if (modifyedParametrs[i, j] > max)
@@ -172,7 +172,7 @@ namespace SA_Lab_9
             return result;
         }
 
-        private static int[,] GetPareto(int[,] parametrs)
+        private static double[,] GetPareto(double[,] parametrs)
         {
             int indexRemoveAlts = 0;
             for (int k = 0; k < parametrs.GetLength(1); k++)
@@ -212,7 +212,7 @@ namespace SA_Lab_9
                     }
                 }
             }
-            int[,] modifyedParametrs = new int[parametrs.GetLength(0), parametrs.GetLength(1) - indexRemoveAlts];
+            double[,] modifyedParametrs = new double[parametrs.GetLength(0), parametrs.GetLength(1) - indexRemoveAlts];
 
             for (int i = 0; i < parametrs.GetLength(0); i++)
             {
@@ -239,7 +239,7 @@ namespace SA_Lab_9
             {
                 for (int j = 0; j < massive.GetLength(1); j++)
                 {
-                    Console.Write("{0:0.##} ",massive[i, j]);
+                    Console.Write("{0:0.##} ", massive[i, j]);
                 }
                 Console.WriteLine();
             }
