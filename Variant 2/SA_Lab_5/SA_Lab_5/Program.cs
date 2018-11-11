@@ -119,7 +119,6 @@ namespace SA_Lab_5
             //}
 
             //получение весов критериев
-            int kriteriesCount = matrixOfRelationsKriteriesByExp1.GetLength(0);
             double[] kriteriesWeights = GetWeights(matrixOfRelationsKriteriesByExp1, matrixOfRelationsKriteriesByExp2);
             //Console.WriteLine("Веса критериев:");
             //for (int i = 0; i < kriteriesCount; i++)
